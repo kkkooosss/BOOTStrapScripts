@@ -1,0 +1,6 @@
+#!/bin/bash
+yum update -y
+yum install httpd -y
+sudo service httpd start
+sudo chkconfig hpttd on
+echo "<html><body bgcolor=black><center><h1><p><font color=red>Web Server-1</h1></center></body><html>" > /var/www/html/index.html

@@ -1,0 +1,15 @@
+
+#!/bin/bash
+echo "------------------Start-------------------------------------------"
+yum -y update
+wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u141-b15/336fa29ff2bb4ef291e347e091f7f4a7/jdk-8u141-linux-x64.rpm
+
+yum install -y jdk-8u141-linux-x64.rpm
+
+wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+yum -y install jenkins
+service jenkins start
+echo "-------------------Stop---------------------------------------------"
+
+

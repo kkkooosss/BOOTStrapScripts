@@ -1,0 +1,84 @@
+WordPress Installation
+https://comtechies.com/how-to-install-wordpress-on-amazon-ec2-ubuntu-instance.html
+
+sudo apt-get update
+sudo apt-get install lamp-server^
+
+mysql adjustment
+sudo mysql_secure_installation
+
+sudo mysql -u root -p
+
+CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+GRANT ALL ON wordpress.* TO 'wordpressuser'@'localhost' IDENTIFIED BY 'password';
+FLUSH PRIVILEGES;
+exit
+
+sudo apt update
+sudo apt install php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
+sudo nano /etc/apache2/mods-enabled/dir.conf  (move .php forward)
+sudo systemctl restart apache2
+- can check php
+-------
+<?php
+phpinfo();
+?>
+
+-------
+
+Apache2 adjustment
+
+add to  sudo nano /etc/apache2/sites-available/000-default.conf
+------------------
+<Directory /var/www/html/>
+    AllowOverride All
+</Directory>
+---------------
+sudo a2enmod rewrite
+sudo apache2ctl configtest
+Syntax OK
+sudo systemctl restart apache2
+
+****
+cd /var/www/html
+sudo curl -O https://wordpress.org/latest.tar.gz
+sudo tar xzvf latest.tar.gz
+sudo rm index.html
+sudo cp -a -r wordpress/* .
+sudo rm latest.tar.gz
+sudo touch /var/www/html/.htaccess
+
+sudo cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+sudo mkdir /var/www/html/wp-content/upgrade
+sudo chown -R www-data:www-data /var/www/html
+sudo find /var/www/html/ -type d -exec chmod 750 {} \;
+sudo find /var/www/html/ -type f -exec chmod 640 {} \;
+
+SALT
+curl -s https://api.wordpress.org/secret-key/1.1/salt/
+=======
+sudo nano /var/www/html/wp-config.php
+define('DB_NAME', 'wordpress');
+
+/** MySQL database username */
+define('DB_USER', 'wordpressuser');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'password');
+
+. . .
+
+define('FS_METHOD', 'direct');
+=============================
+
+
+go to http:
+
+
+
+  
+
+
+
+
+

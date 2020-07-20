@@ -1,0 +1,101 @@
+
+
+sudo apt-get update
+
+NGINX
+sudo apt-get install nginx
+sudo ufw allow 'Nginx HTTP'
+sudo ufw status
+inactive
+.....
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw enable   (sudo ufw disable)
+-----------------------------
+sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+Nginx HTTP                 ALLOW       Anywhere                  
+22/tcp                     ALLOW       Anywhere                  
+Nginx HTTP (v6)            ALLOW       Anywhere (v6)             
+22/tcp (v6)                ALLOW       Anywhere (v6)  
+----------------------------
+
+MYSQL
+sudo apt install mysql-server
+sudo mysql_secure_installation
+
+sudo mysql
+CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+GRANT ALL ON wordpress.* TO 'wordpressuser'@'localhost' IDENTIFIED BY 'password';
+FLUSH PRIVILEGES;
+exit
+
+PHP
+sudo apt install php-fpm php-mysql
+
+sudo nano /etc/nginx/sites-available/wordpress.com
+sudo ln -s /etc/nginx/sites-available/wordpress.com /etc/nginx/sites-enabled/
+sudo unlink /etc/nginx/sites-enabled/default
+sudo nginx -t
+sudo systemctl reload nginx
+
+PHP test
+sudo nano /var/www/html/info.php
+------
+<?php
+phpinfo();
+?>
+-----------
+sudo rm /var/www/html/info.php ; sudo rm /var/www/html/index.html
+sudo apt update
+sudo apt install php-curl php-gd php-intl php-mbstring php-soap php-xml php-xmlrpc php-zip
+sudo systemctl restart php7.2-fpm
+
+NGINX adjustment
+https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-lemp-on-ubuntu-18-04-ru
+change /etc/nginx/sites-available/wordpress.com file (add location and try_files)
+sudo nginx -t
+sudo systemctl reload nginx
+
+
+see WordPressInstall_aws_ubuntu.txt
+install WP
+****
+cd /var/www/html
+
+sudo apt-get install phpmyadmin
+sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+sudo nano /etc/nginx/nginx.conf
+---------
+server{
+listen 80;
+server_name phpmyadmin;
+access_log /var/log/phpmyadmin.access_log;
+error_log /var/log/phpmyadmin.error_log;
+
+location ^~ /phpmyadmin/ {
+alias /usr/share/phpMyAdmin/;
+index index.php;
+location ~ /phpmyadmin(/.*\.php) {
+include fastcgi.conf;
+fastcgi_param SERVER_NAME localhost;
+fastcgi_param SCRIPT_FILENAME /usr/share/phpMyAdmin$1;
+fastcgi_pass 127.0.0.1:9000;
+fastcgi_index index.php;
+}
+}
+}
+--------------------------
+sudo systemctl restart nginx
+
+http://192.168.0.100/phpmyadmin/
+
+wpuser
+)(q35BF@AAV)if5y#W
+
+
+
